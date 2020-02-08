@@ -13,4 +13,14 @@
 
 @property(nonatomic, assign) BOOL add0x;
 
+@property(nonatomic, assign) UIColor *buttonBackgroundColor;
+
+@property(nonatomic, assign) UIColor *buttonBackgroundHighlightedColor;
+
+@property(nonatomic, assign) UIColor *buttonTextColor;
+
+@property(nonatomic, assign) UIColor *separatorColor;
+
+
 @end
+

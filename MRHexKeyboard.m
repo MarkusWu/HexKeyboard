@@ -38,6 +38,7 @@ static UIColor *sGrayColour = nil;
 @property(nonatomic, strong) UIButton * zeroxButton;
 @property(nonatomic, strong) UIButton * zeroButton;
 @property(nonatomic, strong) UIButton * deleteButton;
+@property(nonatomic, strong) UIView * separatorView;
 
 @property(nonatomic, strong) NSArray<UIButton *> * numberButtons;
 
@@ -60,11 +61,22 @@ static UIColor *sGrayColour = nil;
         
         self.backgroundColor = [UIColor lightGrayColor];
         
+        UIButton *button = [[UIButton alloc] init];
+        button.translatesAutoresizingMaskIntoConstraints = NO;
+        
+        _buttonTextColor = [UIColor blackColor];
+        _buttonBackgroundColor = [UIColor whiteColor];
+        _buttonBackgroundHighlightedColor = [UIColor lightGrayColor];
+        
         _display0xButton = YES;
         _add0x = YES;
         
-        UIButton *button = [[UIButton alloc] init];
-        button.translatesAutoresizingMaskIntoConstraints = NO;
+        UIView *v = [[UIView alloc] init];
+        v.translatesAutoresizingMaskIntoConstraints = NO;
+        [self addSubview:v];
+        self.separatorView = v;
+        _separatorColor = [UIColor lightGrayColor];
+        self.separatorView.backgroundColor = _separatorColor;
         
         button.backgroundColor = sGrayColour;
         UIImage *image;
@@ -76,6 +88,7 @@ static UIColor *sGrayColour = nil;
         } else {
             image = [UIImage imageNamed:@"deleteButton"];
         }
+        image = [image imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
         [button setImage:image forState:UIControlStateNormal];
         if([button respondsToSelector:@selector(imageView)]) {
             button.imageView.contentMode = UIViewContentModeCenter;
@@ -151,7 +164,42 @@ static UIColor *sGrayColour = nil;
 
 - (void)setDisplay0xButton:(BOOL)display0xButton {
     _display0xButton = display0xButton;
-    self.zeroxButton.hidden = !_display0xButton;
+    //self.zeroxButton.hidden = !_display0xButton;
+    if (_display0xButton) {
+        [self.zeroxButton setTitle:@"0x" forState:UIControlStateNormal];
+        [self.zeroxButton setUserInteractionEnabled:true];
+    } else {
+        [self.zeroxButton setTitle:NULL forState:UIControlStateNormal];
+        [self.zeroxButton setUserInteractionEnabled:false];
+    }
+}
+
+- (void) setSeparatorColor:(UIColor *)separatorColor {
+    _separatorColor = separatorColor;
+    self.separatorView.backgroundColor = _separatorColor;
+}
+
+- (void)setButtonTextColor:(UIColor *)buttonTextColor {
+    _buttonTextColor = buttonTextColor;
+    for (int i = 0; i < [_numberButtons count]; i++)
+    {
+        [_numberButtons[i] setTitleColor:_buttonTextColor forState:UIControlStateNormal];
+    }
+    [_zeroButton setTitleColor:_buttonTextColor forState:UIControlStateNormal];
+    [_zeroxButton setTitleColor:_buttonTextColor forState:UIControlStateNormal];
+    [_deleteButton setTitleColor:_buttonTextColor forState:UIControlStateNormal];
+    [_deleteButton setTintColor:_buttonTextColor];
+}
+
+- (void)setButtonBackgroundColor:(UIColor *)buttonBackgroundColor {
+    _buttonBackgroundColor = buttonBackgroundColor;
+    for (int i = 0; i < [_numberButtons count]; i++)
+    {
+        _numberButtons[i].backgroundColor = buttonBackgroundColor;
+    }
+    _zeroButton.backgroundColor = buttonBackgroundColor;
+    _zeroxButton.backgroundColor = buttonBackgroundColor;
+    _deleteButton.backgroundColor = buttonBackgroundColor;
 }
 
 - (void)updateConstraints {
@@ -171,7 +219,16 @@ static UIColor *sGrayColour = nil;
         leftLayoutAnchor = self.leftAnchor;
         rightLayoutAnchor = self.rightAnchor;
     }
+    
     [self removeConstraints:self.positionConstraints];
+    
+    [NSLayoutConstraint activateConstraints:@[
+        [topLayoutAnchor constraintEqualToAnchor:self.separatorView.topAnchor],
+        [rightLayoutAnchor constraintEqualToAnchor:self.separatorView.rightAnchor],
+        [bottomLayoutAnchor constraintEqualToAnchor:self.separatorView.bottomAnchor],
+        [leftLayoutAnchor constraintEqualToAnchor:self.separatorView.leftAnchor]
+    ]];
+    
     NSMutableArray <NSLayoutConstraint *> * constraints = [NSMutableArray arrayWithCapacity:45];
     if(self.traitCollection.horizontalSizeClass == UIUserInterfaceSizeClassCompact) {
         for(NSInteger num = 0; num < 15; num += 3) {
@@ -231,10 +288,10 @@ static UIColor *sGrayColour = nil;
         fontSize = 20.0f;
     }
     
-    button.backgroundColor = (grayBackground) ? sGrayColour : [UIColor whiteColor];
+    button.backgroundColor = (grayBackground) ? sGrayColour : _buttonBackgroundColor;
     button.titleLabel.font = [UIFont systemFontOfSize:fontSize];
     
-    [button setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
+    [button setTitleColor:_buttonTextColor forState:UIControlStateNormal];
     [button setTitle:title forState:UIControlStateNormal];
     [button addTarget:self action:@selector(changeButtonBackgroundColourForHighlight:) forControlEvents:UIControlEventTouchDown];
     [button addTarget:self action:@selector(changeButtonBackgroundColourForHighlight:) forControlEvents:UIControlEventTouchDragEnter];
@@ -260,7 +317,7 @@ static UIColor *sGrayColour = nil;
     UIColor *newColour = sGrayColour;
     
     if ([button.backgroundColor isEqual:sGrayColour]) {
-        newColour = [UIColor whiteColor];
+        newColour = _buttonBackgroundColor;
     }
     
     button.backgroundColor = newColour;
@@ -380,3 +437,4 @@ static UIColor *sGrayColour = nil;
 }
 
 @end
+
