@@ -80,9 +80,7 @@ static UIColor *sGrayColour = nil;
         
         button.backgroundColor = sGrayColour;
         UIImage *image;
-        if (_deleteImage) {
-            image = _deleteImage;
-        } else if (@available(iOS 13.0, *)) {
+        if (@available(iOS 13.0, *)) {
             NSBundle *bundle = [NSBundle bundleForClass:self.class];
             image = [UIImage imageNamed:@"deleteButton"
                                inBundle:bundle
