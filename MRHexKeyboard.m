@@ -80,7 +80,9 @@ static UIColor *sGrayColour = nil;
         
         button.backgroundColor = sGrayColour;
         UIImage *image;
-        if (@available(iOS 13.0, *)) {
+        if (_deleteImage) {
+            image = _deleteImage;
+        } else if (@available(iOS 13.0, *)) {
             NSBundle *bundle = [NSBundle bundleForClass:self.class];
             image = [UIImage imageNamed:@"deleteButton"
                                inBundle:bundle
@@ -200,6 +202,12 @@ static UIColor *sGrayColour = nil;
     _zeroButton.backgroundColor = buttonBackgroundColor;
     _zeroxButton.backgroundColor = buttonBackgroundColor;
     _deleteButton.backgroundColor = buttonBackgroundColor;
+}
+
+- (void) setDeleteImage:(UIImage *)deleteImage {
+    _deleteImage = deleteImage;
+    UIImage *image = [deleteImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
+    [_deleteButton setImage:image forState:UIControlStateNormal];
 }
 
 - (void)updateConstraints {
@@ -437,4 +445,3 @@ static UIColor *sGrayColour = nil;
 }
 
 @end
-

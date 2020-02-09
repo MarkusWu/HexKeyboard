@@ -21,6 +21,7 @@
 
 @property(nonatomic, assign) UIColor *separatorColor;
 
+@property(nonatomic, assign) UIImage *deleteImage;
 
 @end
 
