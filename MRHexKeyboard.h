@@ -21,7 +21,7 @@
 
 @property(nonatomic, assign) UIColor *separatorColor;
 
-@property(nonatomic, retain) UIImage *deleteImage;
+- (void) setImageForDeleteButton:(UIImage *)deleteImage;
 
 @end
 

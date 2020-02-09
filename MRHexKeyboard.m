@@ -204,8 +204,7 @@ static UIColor *sGrayColour = nil;
     _deleteButton.backgroundColor = buttonBackgroundColor;
 }
 
-- (void) setDeleteImage:(UIImage *)deleteImage {
-    _deleteImage = deleteImage;
+- (void) setImageForDeleteButton:(UIImage *)deleteImage {
     UIImage *image = [deleteImage imageWithRenderingMode:UIImageRenderingModeAlwaysTemplate];
     [_deleteButton setImage:image forState:UIControlStateNormal];
 }
